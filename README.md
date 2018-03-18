@@ -9,3 +9,8 @@ In-app settings aren't functional yet; you'll need to copy your Discord token in
 
 How to get your token: https://www.youtube.com/watch?time_continue=31&v=PlXrkOj3OEs
 (The video talks about 'watch-app settings' because I originally recorded it for my Pebble-Watch Discord Client)
+
+Video demo of the app:
+https://twitter.com/_cellomonster/status/975012599275360256
+
+Support for iPhone OS 2, 3 & 4 soon
