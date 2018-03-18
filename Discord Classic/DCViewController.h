@@ -2,12 +2,14 @@
 //  DCViewController.h
 //  Discord Classic
 //
-//  Created by Julian Triveri on 3/2/18.
+//  Created by Julian Triveri on 3/4/18.
 //  Copyright (c) 2018 Julian Triveri. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "DCServerCommunicator.h"
 
-@interface DCViewController : UIViewController
-
+@interface DCViewController : UINavigationController
+@property DCServerCommunicator* serverCommunicator;
+@property DCGuildListViewController* guildViewController;
 @end

@@ -2,37 +2,28 @@
 //  DCViewController.m
 //  Discord Classic
 //
-//  Created by Julian Triveri on 3/2/18.
+//  Created by Julian Triveri on 3/4/18.
 //  Copyright (c) 2018 Julian Triveri. All rights reserved.
 //
 
 #import "DCViewController.h"
-
-@interface DCViewController ()
-
-@end
+#import "DCServerCommunicator.h"
+#import "DCGuildListViewController.h"
 
 @implementation DCViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad{
+	[super viewDidLoad];
+	//Start server communicator
+	[self setServerCommunicator:DCServerCommunicator.new];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+- (void)viewDidUnload{
+	[super viewDidUnload];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
-        return YES;
-    }
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end
