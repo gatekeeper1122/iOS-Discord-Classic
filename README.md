@@ -1,14 +1,15 @@
 # iOS-Discord-Classic
 An unofficial and bare-bones Discord client for iOS 5 and 6
 
-Unread indicators on guilds are a little broken for now (wont refresh). Unread indicators on channels work fine.
+## Things that need done:
+Fix unread indicators on Guild menu
 
-Super bare-bones. Chat is text only, no voice-chat or posts with embeded content (images).
+Implement Discord gateway resume (user will be able to leave app and repoen without disconnecting)
 
-In-app settings aren't functional yet; you'll need to copy your Discord token into the 'token' string in DCServerCommunicator.m and compile the app for now.
+Support DM and DM groups
 
-How to get your token: https://www.youtube.com/watch?time_continue=31&v=PlXrkOj3OEs
+Images in chat
 
-Video demo: https://twitter.com/_cellomonster/status/975012599275360256
+Support for iPhone OS 2, 3 & 4
 
-Support for iPhone OS 2, 3 & 4 soon
+Notifications (maybe)
