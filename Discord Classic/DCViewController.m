@@ -15,7 +15,7 @@
 - (void)viewDidLoad{
 	[super viewDidLoad];
 	//Start server communicator
-	[self setServerCommunicator:DCServerCommunicator.new];
+	[DCServerCommunicator sharedInstance];
 }
 
 - (void)viewDidUnload{

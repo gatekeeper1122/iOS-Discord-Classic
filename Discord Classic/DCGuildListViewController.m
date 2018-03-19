@@ -71,6 +71,9 @@
 	[self setDidLoadImages:false];
 	//Run handleReady when recieving READY message from DCServerCommunicator
 	[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleReady:) name:@"READY" object:nil];
+	
+	if(DCServerCommunicator.sharedInstance.token.length < 1)
+		[self performSegueWithIdentifier:@"to Settings" sender:self];
 }
 
 - (void)handleReady:(NSNotification*)notification {

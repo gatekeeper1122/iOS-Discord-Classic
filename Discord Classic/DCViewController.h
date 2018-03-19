@@ -10,6 +10,5 @@
 #import "DCServerCommunicator.h"
 
 @interface DCViewController : UINavigationController
-@property DCServerCommunicator* serverCommunicator;
-@property DCGuildListViewController* guildViewController;
+
 @end

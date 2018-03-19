@@ -14,6 +14,7 @@
 @implementation DCServerCommunicator
 
 + (DCServerCommunicator *)sharedInstance {
+	
 	static DCServerCommunicator *sharedInstance = nil;
 	
 	if (sharedInstance == nil) {
@@ -26,235 +27,237 @@
 
 - (void)startCommunicator{
 	
-
-#warning Paste your discord token here
-	self.token = @"";
+	NSString* token = [NSUserDefaults.standardUserDefaults stringForKey:@"token"];
 	
-	
-	self.gatewayURL = @"wss://gateway.discord.gg/?encoding=json&v=6";
-	
-	//Establish websocket connection with discord
-	NSURL *websocketUrl = [NSURL URLWithString:@"wss://gateway.discord.gg/?encoding=json&v=6"];
-	self.websocket = [WSWebSocket.alloc initWithURL:websocketUrl protocols:nil];
-	
-	//Recieved message
-	[self.websocket setTextCallback:^(NSString *responseString) {
+	if(token!=nil){
 		
-		//Parse JSON
-		NSDictionary *parsedResponse = [self parseJSON:responseString];
+		[self setToken:token];
 		
-		//Dictionary we will send to Discord to log in
-		NSDictionary *objectToSend;
+		[self setGatewayURL:@"wss://gateway.discord.gg/?encoding=json&v=6"];
 		
-		//Data values for easy access
-		int op = [[parsedResponse valueForKey:@"op"] integerValue];
-		NSString* t = [parsedResponse valueForKey:@"t"];
-		NSDictionary* d = [parsedResponse valueForKey:@"d"];
+		//Establish websocket connection with discord
+		NSURL *websocketUrl = [NSURL URLWithString:@"wss://gateway.discord.gg/?encoding=json&v=6"];
+		self.websocket = [WSWebSocket.alloc initWithURL:websocketUrl protocols:nil];
 		
-		//Log gateway events
-		NSLog(@"Op code %i: Event %@\n%@", op, t, d);
-		
-		//OP 10
-		if(op == 10){
-			//Get heartbeat interval
-			int heartbeat = [[d valueForKey:@"heartbeat_interval"] intValue];
+		//Recieved message
+		[self.websocket setTextCallback:^(NSString *responseString) {
 			
-			//Send a heartbeat at interval heartbeatinterval
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[NSTimer scheduledTimerWithTimeInterval:heartbeat/1000
-																				 target:self
-																			 selector:@selector(sendHeartbeat:)
-																			 userInfo:nil
-																				repeats:YES];
-			});
+			//Parse JSON
+			NSDictionary *parsedResponse = [self parseJSON:responseString];
 			
-			//Send Identify
-			objectToSend = @{
-			@"op":@2,
-			@"d":@{
-			@"token":self.token,
-			@"properties":@{ @"$browser" : @"peble" },
-			@"large_threshold":@"50",
-			}
-			};
+			//Dictionary we will send to Discord to log in
+			NSDictionary *objectToSend;
 			
-			[self sendJSON:objectToSend];
-		}
-		
-		
-		//On recieve ready event after auth
-		if(op == 0 && [t isEqualToString:@"READY"]){
+			//Data values for easy access
+			int op = [[parsedResponse valueForKey:@"op"] integerValue];
+			NSString* t = [parsedResponse valueForKey:@"t"];
+			NSDictionary* d = [parsedResponse valueForKey:@"d"];
 			
-			self.readStates = NSMutableDictionary.new;
+			//Log gateway events
+			NSLog(@"Op code %i: Event %@\n%@", op, t, d);
 			
-			NSArray* readStatesArray = [d valueForKey:@"read_state"];
-			
-			for(int i = 0; i < readStatesArray.count; i++){
-				NSDictionary* readStateAtIndex = [readStatesArray objectAtIndex:i];
+			//OP 10
+			if(op == 10){
+				//Get heartbeat interval
+				int heartbeat = [[d valueForKey:@"heartbeat_interval"] intValue];
 				
-				NSString* readStateChannelId = [readStateAtIndex valueForKey:@"id"];
-				NSString* readStateMessageId = [readStateAtIndex valueForKey:@"last_message_id"];
+				//Send a heartbeat at interval heartbeatinterval
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[NSTimer scheduledTimerWithTimeInterval:heartbeat/1000
+																					 target:self
+																				 selector:@selector(sendHeartbeat:)
+																				 userInfo:nil
+																					repeats:YES];
+				});
 				
-				[self.readStates setObject:readStateMessageId forKey:readStateChannelId];
+				//Send Identify
+				objectToSend = @{
+				@"op":@2,
+				@"d":@{
+				@"token":self.token,
+				@"properties":@{ @"$browser" : @"peble" },
+				@"large_threshold":@"50",
+				}
+				};
+				
+				[self sendJSON:objectToSend];
 			}
 			
-			self.guilds = NSMutableArray.new;
-			self.channels = NSMutableArray.new;
 			
-			//Get the JSON data for our guilds
-			NSArray* rawGuildDataArray = [d valueForKey:@"guilds"];
-			
-			//Check that we got an array of guilds
-			if(rawGuildDataArray){
+			//On recieve ready event after auth
+			if(op == 0 && [t isEqualToString:@"READY"]){
 				
-				//Loop through all channels
-				for(int guildIndex = 0; guildIndex < rawGuildDataArray.count; guildIndex++){
+				self.readStates = NSMutableDictionary.new;
+				
+				NSArray* readStatesArray = [d valueForKey:@"read_state"];
+				
+				for(int i = 0; i < readStatesArray.count; i++){
+					NSDictionary* readStateAtIndex = [readStatesArray objectAtIndex:i];
 					
-					//Get the guild at guildIndex and check that it isn't nil (no one likes nil)
-					NSDictionary* rawGuildData = [rawGuildDataArray objectAtIndex:guildIndex];
-					if(rawGuildData){
+					NSString* readStateChannelId = [readStateAtIndex valueForKey:@"id"];
+					NSString* readStateMessageId = [readStateAtIndex valueForKey:@"last_message_id"];
+					
+					[self.readStates setObject:readStateMessageId forKey:readStateChannelId];
+				}
+				
+				self.guilds = NSMutableArray.new;
+				self.channels = NSMutableArray.new;
+				
+				//Get the JSON data for our guilds
+				NSArray* rawGuildDataArray = [d valueForKey:@"guilds"];
+				
+				//Check that we got an array of guilds
+				if(rawGuildDataArray){
+					
+					//Loop through all channels
+					for(int guildIndex = 0; guildIndex < rawGuildDataArray.count; guildIndex++){
 						
-						//Place the JSON channel objects from the guild at guildIndex in an array
-						NSArray* rawChannelDataArray = [rawGuildData valueForKey:@"channels"];
-						if(rawChannelDataArray){
+						//Get the guild at guildIndex and check that it isn't nil (no one likes nil)
+						NSDictionary* rawGuildData = [rawGuildDataArray objectAtIndex:guildIndex];
+						if(rawGuildData){
 							
-							//Create the new guild object, using the newChannels array we will create
-							DCGuild* newGuild = DCGuild.new;
-							
-							//We will pass this array into our new guild object later. This is an array of that guild's channels
-							NSMutableArray* newChannels = NSMutableArray.new;
-							
-							//Loop through all the channels of the guild at guildIndex
-							for(int channelIndex = 0; channelIndex < rawChannelDataArray.count; channelIndex++){
+							//Place the JSON channel objects from the guild at guildIndex in an array
+							NSArray* rawChannelDataArray = [rawGuildData valueForKey:@"channels"];
+							if(rawChannelDataArray){
 								
-								//Get the JSON object of the channel at channelIndex
-								NSDictionary* rawChannelData = [rawChannelDataArray objectAtIndex:channelIndex];
+								//Create the new guild object, using the newChannels array we will create
+								DCGuild* newGuild = DCGuild.new;
 								
-								//If its a text channel...
-								if([rawChannelData valueForKey:@"type"] == @0){
+								//We will pass this array into our new guild object later. This is an array of that guild's channels
+								NSMutableArray* newChannels = NSMutableArray.new;
+								
+								//Loop through all the channels of the guild at guildIndex
+								for(int channelIndex = 0; channelIndex < rawChannelDataArray.count; channelIndex++){
 									
-									//Create the new channel object
-									DCChannel* newChannel = DCChannel.new;
+									//Get the JSON object of the channel at channelIndex
+									NSDictionary* rawChannelData = [rawChannelDataArray objectAtIndex:channelIndex];
 									
-									//Set the channel info
-									newChannel.snowflake = [rawChannelData valueForKey:@"id"];
-									newChannel.name = [rawChannelData valueForKey:@"name"];
-									newChannel.lastMessageId = [rawChannelData valueForKey:@"last_message_id"];
-									newChannel.parentGuild = newGuild;
-									
-									//Check if the channel is read or not
-									/*if([[self.readStates valueForKey:newChannel.snowflake] isEqualToString:newChannel.lastMessageId])
-										[newChannel setRead:true];
-									else
-										[newChannel setRead:false];*/
-									
-									[newChannel checkIfRead];
-									
-									//Add that object to our channel array for the new guild
-									[newChannels addObject:newChannel];
-									[self.channels addObject:newChannel];
-									
-									NSLog(@"Created new channel object: %@", newChannel);
+									//If its a text channel...
+									if([rawChannelData valueForKey:@"type"] == @0){
+										
+										//Create the new channel object
+										DCChannel* newChannel = DCChannel.new;
+										
+										//Set the channel info
+										newChannel.snowflake = [rawChannelData valueForKey:@"id"];
+										newChannel.name = [rawChannelData valueForKey:@"name"];
+										newChannel.lastMessageId = [rawChannelData valueForKey:@"last_message_id"];
+										newChannel.parentGuild = newGuild;
+										
+										//Check if the channel is read or not
+										/*if([[self.readStates valueForKey:newChannel.snowflake] isEqualToString:newChannel.lastMessageId])
+										 [newChannel setRead:true];
+										 else
+										 [newChannel setRead:false];*/
+										
+										[newChannel checkIfRead];
+										
+										//Add that object to our channel array for the new guild
+										[newChannels addObject:newChannel];
+										[self.channels addObject:newChannel];
+										
+										NSLog(@"Created new channel object: %@", newChannel);
+									}
 								}
+								
+								//Set the guild details
+								newGuild.snowflake = [rawGuildData valueForKey:@"id"];
+								newGuild.name = [rawGuildData valueForKey:@"name"];
+								newGuild.iconHash = [rawGuildData valueForKey:@"icon"];
+								newGuild.channels = newChannels;
+								
+								[newGuild checkIfRead];
+								
+								NSLog(@"Created new guild object: %@", newGuild);
+								
+								//Add it to our communicator guild array
+								[self.guilds addObject:newGuild];
 							}
-							
-							//Set the guild details
-							newGuild.snowflake = [rawGuildData valueForKey:@"id"];
-							newGuild.name = [rawGuildData valueForKey:@"name"];
-							newGuild.iconHash = [rawGuildData valueForKey:@"icon"];
-							newGuild.channels = newChannels;
-							
-							[newGuild checkIfRead];
-							
-							NSLog(@"Created new guild object: %@", newGuild);
-							
-							//Add it to our communicator guild array
-							[self.guilds addObject:newGuild];
 						}
 					}
 				}
+				
+				//Now that that's all done,
+				//send a notification that we successfully created our guild objects
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[NSNotificationCenter.defaultCenter postNotificationName:@"READY" object:self];
+				});
 			}
 			
-			//Now that that's all done,
-			//send a notification that we successfully created our guild objects
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[NSNotificationCenter.defaultCenter postNotificationName:@"READY" object:self];
-			});
-		}
-		
-		//On reading a message
-		if(op == 0 && [t isEqualToString:@"MESSAGE_ACK"]){
-			/*dispatch_async(dispatch_get_main_queue(), ^{
-			 for(int i = 0; i < self.readStates.count; i++){
-			 
-			 NSString* readStateChannelIdForCurrentIndex = [[self.readStates objectAtIndex:i] valueForKey:@"id"];
-			 NSString* recievedChannelId = [d valueForKey:@"channel_id"];
-			 
-			 if([readStateChannelIdForCurrentIndex isEqualToString: recievedChannelId]){
-			 NSString* recievedMessageId = [d valueForKey:@"message_id"];
-			 
-			 NSDictionary* updatedReadState = @{
-			 @"id":recievedChannelId,
-			 @"last_message_id":recievedMessageId
-			 };
-			 
-			 [self.readStates replaceObjectAtIndex:i withObject:updatedReadState];
-			 }
-			 }
-			 });*/
-		}
-		
-		//On recieving a message
-		if(op == 0 && [t isEqualToString:@"MESSAGE_CREATE"]){
-			NSString* messageChannelId = [parsedResponse valueForKeyPath:@"d.channel_id"];
+			//On reading a message
+			if(op == 0 && [t isEqualToString:@"MESSAGE_ACK"]){
+				/*dispatch_async(dispatch_get_main_queue(), ^{
+				 for(int i = 0; i < self.readStates.count; i++){
+				 
+				 NSString* readStateChannelIdForCurrentIndex = [[self.readStates objectAtIndex:i] valueForKey:@"id"];
+				 NSString* recievedChannelId = [d valueForKey:@"channel_id"];
+				 
+				 if([readStateChannelIdForCurrentIndex isEqualToString: recievedChannelId]){
+				 NSString* recievedMessageId = [d valueForKey:@"message_id"];
+				 
+				 NSDictionary* updatedReadState = @{
+				 @"id":recievedChannelId,
+				 @"last_message_id":recievedMessageId
+				 };
+				 
+				 [self.readStates replaceObjectAtIndex:i withObject:updatedReadState];
+				 }
+				 }
+				 });*/
+			}
 			
-			NSString* lastMessageId = [d valueForKeyPath:@"id"];
-			
-			if(self.selectedChannel != nil){
-				if([messageChannelId isEqualToString:self.selectedChannel.snowflake]){
-					
-					NSString* username = [d valueForKeyPath:@"author.username"];
-					NSString* content = [d objectForKey:@"content"];
-					NSString* message = [NSString stringWithFormat:@"\n%@\n%@\n", username, content];
-					
-					NSDictionary* userInfo = @{@"message": message};
-					
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[NSNotificationCenter.defaultCenter postNotificationName:@"MESSAGE CREATE" object:self userInfo:userInfo];
-					});
-					
-					[self.selectedChannel setLastMessageId:lastMessageId];
-					
-					[self.readStates setValue:lastMessageId forKey:self.selectedChannel.snowflake];
-					
-					NSLog(@"The last message was sent in the current channel");
-					
-					//Ack message since we are reading this channel currently
-					[self ackMessage:lastMessageId inChannel:self.selectedChannel];
-				}
-			}else{
+			//On recieving a message
+			if(op == 0 && [t isEqualToString:@"MESSAGE_CREATE"]){
+				NSString* messageChannelId = [parsedResponse valueForKeyPath:@"d.channel_id"];
 				
-				for(int i = 0; i < self.channels.count; i++){
-					
-					DCChannel* channelAtIndex = [self.channels objectAtIndex:i];
-					if([channelAtIndex.snowflake isEqualToString:messageChannelId]){
-						channelAtIndex.lastMessageId = lastMessageId;
+				NSString* lastMessageId = [d valueForKeyPath:@"id"];
+				
+				if(self.selectedChannel != nil){
+					if([messageChannelId isEqualToString:self.selectedChannel.snowflake]){
 						
-						[channelAtIndex checkIfRead];
+						NSString* username = [d valueForKeyPath:@"author.username"];
+						NSString* content = [d objectForKey:@"content"];
+						NSString* message = [NSString stringWithFormat:@"\n%@\n%@\n", username, content];
+						
+						NSDictionary* userInfo = @{@"message": message};
+						
+						dispatch_async(dispatch_get_main_queue(), ^{
+							[NSNotificationCenter.defaultCenter postNotificationName:@"MESSAGE CREATE" object:self userInfo:userInfo];
+						});
+						
+						[self.selectedChannel setLastMessageId:lastMessageId];
+						
+						[self.readStates setValue:lastMessageId forKey:self.selectedChannel.snowflake];
+						
+						NSLog(@"The last message was sent in the current channel");
+						
+						//Ack message since we are reading this channel currently
+						[self ackMessage:lastMessageId inChannel:self.selectedChannel];
+					}
+				}else{
+					
+					for(int i = 0; i < self.channels.count; i++){
+						
+						DCChannel* channelAtIndex = [self.channels objectAtIndex:i];
+						if([channelAtIndex.snowflake isEqualToString:messageChannelId]){
+							channelAtIndex.lastMessageId = lastMessageId;
+							
+							[channelAtIndex checkIfRead];
+						}
+						
+						dispatch_async(dispatch_get_main_queue(), ^{
+							[NSNotificationCenter.defaultCenter postNotificationName:@"MESSAGE ACK" object:self];
+						});
 					}
 					
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[NSNotificationCenter.defaultCenter postNotificationName:@"MESSAGE ACK" object:self];
-					});
+					NSLog(@"The last message was not sent in the current channel");
 				}
 				
-				NSLog(@"The last message was not sent in the current channel");
 			}
-			
-		}
-	}];
-	
-	[self.websocket open];
+		}];
+		
+		[self.websocket open];
+	}
 }
 
 - (void)sendJSON:(NSDictionary*)dictionary{

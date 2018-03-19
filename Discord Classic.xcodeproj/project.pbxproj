@@ -37,6 +37,7 @@
 		09C6B997204A261B007EAC26 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09C6B996204A261B007EAC26 /* Security.framework */; };
 		09C8E28B204C2BFD006A1422 /* DCServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C8E28A204C2BFD006A1422 /* DCServerCommunicator.m */; };
 		09C8E2ED204C3B64006A1422 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09C8E2EC204C3B64006A1422 /* Storyboard.storyboard */; };
+		09D84D0C205F36B90070020A /* DCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D84D0B205F36B90070020A /* DCSettingsViewController.m */; };
 		09DD1FA2204F35FD00153EC7 /* DCChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DD1FA1204F35FD00153EC7 /* DCChatViewController.m */; };
 		09E183BA205EF64700FE90E8 /* DCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E183B9205EF64700FE90E8 /* DCViewController.m */; };
 		09E183BD205EF65000FE90E8 /* DCGuildListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E183BC205EF65000FE90E8 /* DCGuildListViewController.m */; };
@@ -49,6 +50,7 @@
 		09FF02FD205EF9EB00BCBA8D /* DCWebImageOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = 091ED592205CEA7900B02C36 /* DCWebImageOperations.m */; };
 		09FF02FE205EF9EB00BCBA8D /* DCGuild.m in Sources */ = {isa = PBXBuildFile; fileRef = 09260EC620575AE900083813 /* DCGuild.m */; };
 		09FF02FF205EF9EB00BCBA8D /* DCChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 09260EC920575BB200083813 /* DCChannel.m */; };
+		09FF0301205EFB8800BCBA8D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FF0300205EFB8800BCBA8D /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,12 +104,15 @@
 		09C8E289204C2BFD006A1422 /* DCServerCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCServerCommunicator.h; sourceTree = "<group>"; };
 		09C8E28A204C2BFD006A1422 /* DCServerCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCServerCommunicator.m; sourceTree = "<group>"; };
 		09C8E2EC204C3B64006A1422 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Storyboard.storyboard; path = ../Storyboard.storyboard; sourceTree = "<group>"; };
+		09D84D0A205F36B90070020A /* DCSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCSettingsViewController.h; sourceTree = "<group>"; };
+		09D84D0B205F36B90070020A /* DCSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCSettingsViewController.m; sourceTree = "<group>"; };
 		09DD1FA0204F35FD00153EC7 /* DCChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCChatViewController.h; sourceTree = "<group>"; };
 		09DD1FA1204F35FD00153EC7 /* DCChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCChatViewController.m; sourceTree = "<group>"; };
 		09E183B8205EF64700FE90E8 /* DCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCViewController.h; sourceTree = "<group>"; };
 		09E183B9205EF64700FE90E8 /* DCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCViewController.m; sourceTree = "<group>"; };
 		09E183BB205EF65000FE90E8 /* DCGuildListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCGuildListViewController.h; sourceTree = "<group>"; };
 		09E183BC205EF65000FE90E8 /* DCGuildListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCGuildListViewController.m; sourceTree = "<group>"; };
+		09FF0300205EFB8800BCBA8D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +153,7 @@
 		09C6B915204A0F54007EAC26 = {
 			isa = PBXGroup;
 			children = (
+				09FF0300205EFB8800BCBA8D /* Default-568h@2x.png */,
 				094E352B2056E21000368E26 /* Icon.png */,
 				094E35292056E1E900368E26 /* Icon@2x.png */,
 				095284622055EFDA00760073 /* Etc */,
@@ -185,6 +191,8 @@
 				09685286204D9D590089DE45 /* DCChannelListViewController.m */,
 				09DD1FA0204F35FD00153EC7 /* DCChatViewController.h */,
 				09DD1FA1204F35FD00153EC7 /* DCChatViewController.m */,
+				09D84D0A205F36B90070020A /* DCSettingsViewController.h */,
+				09D84D0B205F36B90070020A /* DCSettingsViewController.m */,
 				09C8E2EC204C3B64006A1422 /* Storyboard.storyboard */,
 				09C8E289204C2BFD006A1422 /* DCServerCommunicator.h */,
 				09C8E28A204C2BFD006A1422 /* DCServerCommunicator.m */,
@@ -304,6 +312,7 @@
 				09C8E2ED204C3B64006A1422 /* Storyboard.storyboard in Resources */,
 				094E352A2056E1E900368E26 /* Icon@2x.png in Resources */,
 				094E352C2056E21000368E26 /* Icon.png in Resources */,
+				09FF0301205EFB8800BCBA8D /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +362,7 @@
 				091ED593205CEA7900B02C36 /* DCWebImageOperations.m in Sources */,
 				09FF02F7205EF9DD00BCBA8D /* DCGuildListViewController.m in Sources */,
 				09FF02F8205EF9DF00BCBA8D /* DCViewController.m in Sources */,
+				09D84D0C205F36B90070020A /* DCSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

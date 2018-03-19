@@ -7,6 +7,7 @@
 //
 
 #import "DCSettingsViewController.h"
+#import "DCServerCommunicator.h"
 
 @interface DCSettingsViewController ()
 
@@ -15,7 +16,23 @@
 @implementation DCSettingsViewController
 
 - (void)viewDidLoad{
-    [super viewDidLoad];
+	[super viewDidLoad];
+	
+	NSString* token = [NSUserDefaults.standardUserDefaults stringForKey:@"token"];
+	
+	if(token!=nil){
+		[self.tokenInputField setText:token];
+	}
 }
 
+-(void) viewWillDisappear:(BOOL)animated{
+	[NSUserDefaults.standardUserDefaults setObject:self.tokenInputField.text forKey:@"token"];
+	
+	[DCServerCommunicator.sharedInstance startCommunicator];
+}
+
+- (void)viewDidUnload {
+	[self setTokenInputField:nil];
+	[super viewDidUnload];
+}
 @end
