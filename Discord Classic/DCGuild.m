@@ -25,7 +25,7 @@
 		}
 	}
 	
-[self setRead:true];
+	[self setRead:true];
 }
 
 @end

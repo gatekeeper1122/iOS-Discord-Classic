@@ -181,12 +181,12 @@
 		09C6B92A204A0F54007EAC26 /* Discord Classic */ = {
 			isa = PBXGroup;
 			children = (
+				09C6B933204A0F54007EAC26 /* DCAppDelegate.h */,
+				09C6B934204A0F54007EAC26 /* DCAppDelegate.m */,
 				09E183B8205EF64700FE90E8 /* DCViewController.h */,
 				09E183B9205EF64700FE90E8 /* DCViewController.m */,
 				09E183BB205EF65000FE90E8 /* DCGuildListViewController.h */,
 				09E183BC205EF65000FE90E8 /* DCGuildListViewController.m */,
-				09C6B933204A0F54007EAC26 /* DCAppDelegate.h */,
-				09C6B934204A0F54007EAC26 /* DCAppDelegate.m */,
 				09685285204D9D590089DE45 /* DCChannelListViewController.h */,
 				09685286204D9D590089DE45 /* DCChannelListViewController.m */,
 				09DD1FA0204F35FD00153EC7 /* DCChatViewController.h */,

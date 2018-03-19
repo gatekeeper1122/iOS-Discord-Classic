@@ -25,14 +25,18 @@
 	//Create cell object
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Guild Cell"];
 	
+	DCGuild* guildAtRowIndex = [DCServerCommunicator.sharedInstance.guilds objectAtIndex:indexPath.row];
+	if(!guildAtRowIndex.read)
+		[cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
+	else
+		[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+	
+	NSLog(@"checked channel %d %@", guildAtRowIndex.read, guildAtRowIndex.name);
+	
 	//Define cell if it isn't already
 	if(cell.textLabel.text.length < 1){
 		//Set the name of the cell to the guild it represents
-		DCGuild* guildAtRowIndex = [DCServerCommunicator.sharedInstance.guilds objectAtIndex:indexPath.row];
 		[cell.textLabel setText:guildAtRowIndex.name];
-		
-		if(!guildAtRowIndex.read)
-			[cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
 		
 		[self.cells addObject:cell];
 		
@@ -71,6 +75,7 @@
 	[self setDidLoadImages:false];
 	//Run handleReady when recieving READY message from DCServerCommunicator
 	[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleReady:) name:@"READY" object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleMessageAck:) name:@"MESSAGE ACK" object:nil];
 	
 	if(DCServerCommunicator.sharedInstance.token.length < 1)
 		[self performSegueWithIdentifier:@"to Settings" sender:self];
@@ -79,6 +84,10 @@
 - (void)handleReady:(NSNotification*)notification {
 	//Refresh tableView data on READY notification
   [self.tableView reloadData];
+}
+
+- (void)handleMessageAck:(NSNotification*)notification {
+	[self.tableView reloadData];
 }
 
 - (void)viewDidUnload{

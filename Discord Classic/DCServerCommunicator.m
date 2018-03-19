@@ -186,24 +186,7 @@
 			
 			//On reading a message
 			if(op == 0 && [t isEqualToString:@"MESSAGE_ACK"]){
-				/*dispatch_async(dispatch_get_main_queue(), ^{
-				 for(int i = 0; i < self.readStates.count; i++){
-				 
-				 NSString* readStateChannelIdForCurrentIndex = [[self.readStates objectAtIndex:i] valueForKey:@"id"];
-				 NSString* recievedChannelId = [d valueForKey:@"channel_id"];
-				 
-				 if([readStateChannelIdForCurrentIndex isEqualToString: recievedChannelId]){
-				 NSString* recievedMessageId = [d valueForKey:@"message_id"];
-				 
-				 NSDictionary* updatedReadState = @{
-				 @"id":recievedChannelId,
-				 @"last_message_id":recievedMessageId
-				 };
-				 
-				 [self.readStates replaceObjectAtIndex:i withObject:updatedReadState];
-				 }
-				 }
-				 });*/
+				[NSNotificationCenter.defaultCenter postNotificationName:@"MESSAGE ACK" object:self];
 			}
 			
 			//On recieving a message

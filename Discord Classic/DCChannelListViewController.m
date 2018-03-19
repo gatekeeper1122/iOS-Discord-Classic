@@ -30,12 +30,14 @@
 	//static NSString *guildCellIdentifier = @"Channel Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Channel Cell"];
 	
+	DCChannel* channelAtRowIndex = [self.selectedGuild.channels objectAtIndex:indexPath.row];
+	if(!channelAtRowIndex.read)
+		[cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
+	else
+		[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+	
 	if(cell.textLabel.text.length < 1){
-		DCChannel* channelAtRowIndex = [self.selectedGuild.channels objectAtIndex:indexPath.row];
 		[cell.textLabel setText:channelAtRowIndex.name];
-		
-		if(!channelAtRowIndex.read)
-			[cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
 		
 		[self.cells addObject:cell];
 	}

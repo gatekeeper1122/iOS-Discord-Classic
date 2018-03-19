@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Discord Classic/DCServerCommunicator.m"
-         timestampString = "543111968.517764"
+         timestampString = "543120094.385864"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "338"
-         endingLineNumber = "338"
+         startingLineNumber = "321"
+         endingLineNumber = "321"
          landmarkName = "-sendHeartbeat:"
          landmarkType = "5">
       </FileBreakpoint>
