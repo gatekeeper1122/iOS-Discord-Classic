@@ -2,7 +2,6 @@
 An unofficial and bare-bones Discord client for iOS 5 and 6
 
 ## Things that need done:
-Fix unread indicators on Guild menu
 
 Implement Discord gateway resume (user will be able to leave app and repoen without disconnecting)
 
